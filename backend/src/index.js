@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import authRoutes from './routes/authRoute.route.js'
+import messageRoutes from './routes/message.route.js'
 import { dbConnect } from './lib/dbConnect.js'
 import cookieParser from 'cookie-parser'
 
@@ -12,6 +13,7 @@ dotenv.config()
 const port = process.env.PORT || 8001
 
 app.use('/api/auth', authRoutes)
+app.use('/api/message', messageRoutes)
 
 app.listen(port, () => {
     console.log("Listening on Port", port);
