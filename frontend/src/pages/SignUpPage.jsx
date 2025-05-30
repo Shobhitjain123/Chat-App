@@ -3,20 +3,33 @@ import { userAuthStore } from '../store/useAuthStore'
 import { Lock, Mail, MessageSquare, User, Eye, EyeClosed, Loader2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import AuthImagePattern from '../components/AuthImagePattern'
+import toast from 'react-hot-toast'
+
 const SignUpPage = () => {
 
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
-    fullname: "",
+    fullName: "",
     email: "",
     password: ""
   })
 
   const { isSigningIn, signup } = userAuthStore()
 
-  const validateForm = () => { }
+  const validateForm = () => {
+      if(!formData.fullName.trim()) return toast.error("Full Name is reqiured")
+      if(!formData.email.trim()) return toast.error("Email is reqiured")
+      if(!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid Email type")
+      if(!formData.password.trim()) return toast.error("Password is reqiured")
+      if(formData.password.length < 6) return toast.error("Password is too small")
+
+      return true
+   }
   const handleSubmit = (e) => {
     e.preventDefault()
+    const success = validateForm()
+
+    if(success) signup(formData)
   }
 
   return (
@@ -48,7 +61,7 @@ const SignUpPage = () => {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-1">
                   <User className="size-5 text-base-content/40" />
                 </div>
-                <input type="text" className={'input input-bordered w-full pl-10'} placeholder='John Doe' value={formData.fullname} onChange={(e) => setFormData({ ...formData, fullname: e.target.value })} />
+                <input type="text" className={'input input-bordered w-full pl-10'} placeholder='John Doe' value={formData.fullName} onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} />
               </div>
 
 

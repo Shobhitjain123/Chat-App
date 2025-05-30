@@ -4,10 +4,10 @@ import { generateToken } from '../lib/utils.js'
 import cloudinary from '../lib/cloudinary.js'
 
 const signup = async (req, res) => {
-    const {email, fullname, password} = req.body
+    const {email, fullName, password} = req.body
 
     try {
-        if(!email || !password || !fullname){
+        if(!email || !password || !fullName){
             return res.status(400).json({
                 message: "All Fields are required"
             })
@@ -25,7 +25,7 @@ const signup = async (req, res) => {
         const newUser = await User.create({
             email,
             password: hashedPassword,
-            fullname
+            fullName
         })
 
         if(!newUser){
@@ -40,7 +40,7 @@ const signup = async (req, res) => {
        await newUser.save()
 
         res.status(201).json({
-            message: "User Successfully signed up"
+            message: "User Registred Successfully"
         })
 
     } catch (error) {
@@ -82,7 +82,7 @@ const login = async (req, res) => {
             message: "User Login Successfull",
             user: {
                 email: user.email,
-                fullname: user.fullname,
+                fullName: user.fullName,
                 profilePic: user.profilePic
             }
         })
