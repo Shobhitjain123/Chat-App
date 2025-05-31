@@ -40,7 +40,9 @@ const signup = async (req, res) => {
        await newUser.save()
 
         res.status(201).json({
-            message: "User Registred Successfully"
+                email: newUser.email,
+                fullName: newUser.fullName,
+                profilePic: newUser.profilePic
         })
 
     } catch (error) {
@@ -79,12 +81,10 @@ const login = async (req, res) => {
         generateToken(user._id, res)
 
         res.status(200).json({
-            message: "User Login Successfull",
-            user: {
+                message: "Login Successfull",
                 email: user.email,
                 fullName: user.fullName,
                 profilePic: user.profilePic
-            }
         })
 
 
@@ -115,6 +115,7 @@ const logout = async (req, res) => {
 const updateProfile = async (req, res) => {
     try {
         const {profilePic} = req.body
+        
         const userId = req.user._id
         
         if(!profilePic){
@@ -123,12 +124,11 @@ const updateProfile = async (req, res) => {
             })
         }
         
-        const uploadResponse = cloudinary.uploader.upload(profilePic, {public_id: "profile"})
+        const uploadResponse = await cloudinary.uploader.upload(profilePic)
         
         const updatedUser = await User.findByIdAndUpdate(userId, {profilePic: uploadResponse.secure_url}, {new: true})
         res.status(200).json({
-            message: "File uploaded successfully",
-            updatedUser
+            ...updatedUser 
         })
     } catch (error) {
         console.log("Error in updating profile pic", error.message);

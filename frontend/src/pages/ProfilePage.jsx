@@ -1,17 +1,26 @@
-import React from 'react'
 import { userAuthStore } from '../store/useAuthStore'
 import { Camera, User, Mail } from 'lucide-react'
-
+import { useState } from 'react'
 const ProfilePage = () => {
 
   const {authUser, isUpdatingProfile, updateProfile} = userAuthStore()
-
-  const handleImgUpload = (e) => {}
+  const [selectedImage, setSelectesImage] = useState(null)
+  const handleImgUpload = (e) => {
+    const file = e.target.files[0]
+    if(!file) return
+    const reader = new FileReader()
+    reader.readAsDataURL(file);
+    reader.onload = async () => {
+      const base64Image = reader.result;
+      setSelectesImage(base64Image)
+      await updateProfile({profilePic: base64Image})
+    }   
+  }
 
   return (
     <div className='h-screen pt-20'>
       <div className='max-w-2xl mx-auto p-4 py-8'>
-        <div className='bg-base-300 rounded-xl p-6 space-y-8'>
+        <div className='bg-[#b8a9f2] rounded-xl p-6 space-y-8'>
           <div className='text-center'>
             <h1 className='text-2xl font-semibold'>Profile</h1>
             <p className='mt-2'>Your Profile Information</p>
@@ -21,7 +30,7 @@ const ProfilePage = () => {
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
               <img
-                src={authUser.profilePic || "/avatar.png"}
+                src={ selectedImage ||authUser.profilePic || "/avatar.png"}
                 alt="Profile"
                 className="size-32 rounded-full object-cover border-4 "
               />
@@ -46,14 +55,14 @@ const ProfilePage = () => {
                 />
               </label>
             </div>
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-zinc-800">
               {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo"}
             </p>
           </div>
 
           <div className="space-y-6">
             <div className="space-y-1.5">
-              <div className="text-sm text-zinc-400 flex items-center gap-2">
+              <div className="text-sm text-zinc-800 flex items-center gap-2 font-bold">
                 <User className="w-4 h-4" />
                 Full Name
               </div>
@@ -61,7 +70,7 @@ const ProfilePage = () => {
             </div>
 
             <div className="space-y-1.5">
-              <div className="text-sm text-zinc-400 flex items-center gap-2">
+              <div className="text-sm text-zinc-800 flex items-center gap-2 font-bold">
                 <Mail className="w-4 h-4" />
                 Email Address
               </div>

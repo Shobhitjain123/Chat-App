@@ -7,6 +7,6 @@ const authRoutes = express.Router()
 authRoutes.post('/signup', signup)
 authRoutes.post('/login', login)
 authRoutes.get('/logout', isLoggedIn, logout)
-authRoutes.put("update-profile", isLoggedIn, updateProfile)
+authRoutes.put("/update-profile", isLoggedIn, updateProfile)
 authRoutes.get('/check', isLoggedIn, checkAuth)
 export default authRoutes
