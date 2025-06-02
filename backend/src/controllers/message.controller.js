@@ -27,7 +27,7 @@ const getUsersList = async (req, res) => {
     } catch (error) {
         console.log("Error in getting all users", error.message);
         res.status(500).json({
-            message: "Error in getting all users"
+            message: "Error in getting users"
         })
         
     }
