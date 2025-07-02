@@ -1,18 +1,18 @@
 import { useEffect } from 'react'
 import { useChatStore } from '../store/useChatStore'
-import SideBarLoader from './SideBarLoader'
 import { Users } from 'lucide-react'
+import { userAuthStore } from '../store/useAuthStore'
+import SideBarLoader from './SideBarLoader'
 const SideBar = () => {
 
   const {users,selectedUser, setSelectedUser,getUsers, isUsersLoading} = useChatStore()
-  const onlineUsers = []
+  const {onlineUsers} = userAuthStore()
   useEffect(() => {
     getUsers()  
     
   }, [getUsers])
   
   if(isUsersLoading) return <SideBarLoader />
-
 
   return (
     <aside className='h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200'>

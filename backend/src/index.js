@@ -5,7 +5,8 @@ import messageRoutes from './routes/message.route.js'
 import { dbConnect } from './lib/dbConnect.js'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-const app = express()
+import {app, io, server} from './lib/socket.js'
+
 app.use(express.json())
 dotenv.config()
 app.use(cors({
@@ -19,7 +20,7 @@ const port = process.env.PORT || 8001
 app.use('/api/auth', authRoutes)
 app.use('/api/message', messageRoutes)
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log("Listening on Port", port);
     dbConnect()
 })
