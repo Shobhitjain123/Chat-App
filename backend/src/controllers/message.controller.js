@@ -88,6 +88,7 @@ const sendMessage = async (req, res) => {
     }
 
     const recieverSocketId = getRecieverSocketId(recieverId)
+
     if(recieverSocketId){
       io.to(recieverSocketId).emit("newMessage", newMessage)
     }
@@ -96,6 +97,7 @@ const sendMessage = async (req, res) => {
       message: "Message Sent successfully",
       newMessage,
     });
+    
   } catch (error) {
     console.log("Error in sending message", error.message);
     res.status(500).json({

@@ -1,16 +1,21 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useChatStore } from '../store/useChatStore'
 import { Users } from 'lucide-react'
 import { userAuthStore } from '../store/useAuthStore'
 import SideBarLoader from './SideBarLoader'
+
 const SideBar = () => {
 
   const {users,selectedUser, setSelectedUser,getUsers, isUsersLoading} = useChatStore()
+  const [showOnlyOnline, setShowOnlyOnline] = useState(false)
   const {onlineUsers} = userAuthStore()
+
   useEffect(() => {
     getUsers()  
     
   }, [getUsers])
+
+  const filteredUsers = showOnlyOnline ? users.filter((user) => onlineUsers.includes(user._id)) : users
   
   if(isUsersLoading) return <SideBarLoader />
 
@@ -22,11 +27,24 @@ const SideBar = () => {
           <span className='font-medium hidden lg:block'></span>
         </div>
         {/* Todo: Online Filter Toggle */}
+        <div className="mt-3 hidden lg:flex items-center gap-2">
+          <label className="cursor-pointer flex items-center gap-2">
+            {/* <input type="checkbox" defaultChecked className="toggle toggle-success" /> */}
+            <input
+              type="checkbox"
+              checked={showOnlyOnline}
+              onChange={(e) => setShowOnlyOnline(e.target.checked)}
+              className="toggle toggle-success"
+            />
+            <span className="text-sm">Show online only</span>
+          </label>
+          <span className="text-xs text-zinc-500">({onlineUsers.length - 1} online)</span>
+        </div>
       </div>
 
-       <div className='overflow-y-auto w-full p-3 '></div>
-      {
-        users.map((user) => (
+       <div className='overflow-y-auto w-full p-3'>
+          {
+        filteredUsers.map((user) => (
           <button 
           key={user._id}
           onClick={() => setSelectedUser(user)}
@@ -52,8 +70,12 @@ const SideBar = () => {
           </button>
         ))
       }
-
-
+      {
+        filteredUsers.length === 0 && (
+          <div className='text-center text-zinc-50 py-4'>No Online Users</div>
+        )
+      }
+       </div>
     </aside>
   )
 }
