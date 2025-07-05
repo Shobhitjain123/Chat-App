@@ -6,7 +6,7 @@ import { dbConnect } from './lib/dbConnect.js'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import {app, server} from './lib/socket.js'
-import path from 'path'
+import path from "path"
 
 const port = process.env.PORT || 8001
 const __dirname = path.resolve()
