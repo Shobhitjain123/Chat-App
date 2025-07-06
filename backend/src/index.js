@@ -8,18 +8,16 @@ import cors from 'cors'
 import {app, server} from './lib/socket.js'
 import path from "path"
 
+dotenv.config()
 const port = process.env.PORT || 8001
 const __dirname = path.resolve()
 
-dotenv.config()
 app.use(express.json())
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
 }))
 app.use(cookieParser())
-
-
 
 app.use('/api/auth', authRoutes)
 app.use('/api/message', messageRoutes)
