@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { io } from 'socket.io-client'
 
 const BASE_URL = import.meta.env.VITE_SERVER_URL
+console.log("Server base url", BASE_URL);
 
 export const userAuthStore = create((set, get) => ({
     authUser: null,
@@ -18,8 +19,11 @@ export const userAuthStore = create((set, get) => ({
     
     connectSocket: () => {
         const {authUser} = get()
+        console.log("User is unser connect socket");
+        
         if(!authUser || get().socket?.connect) return
-
+        console.log("User is now here");
+        
         const socket = io(BASE_URL, {
             query: {
                 userId: authUser._id
@@ -30,6 +34,8 @@ export const userAuthStore = create((set, get) => ({
         socket.on("getOnlineUsers", (userIds) => {  
             set({onlineUsers: userIds})
         })
+        console.log("Online users", onlineUsers);
+        
     },
 
     disconnectSocket: () => {
@@ -38,7 +44,7 @@ export const userAuthStore = create((set, get) => ({
 
     checkAuth: async () => {
         try {
-            const res = await axiosInstance.get("/auth/check")
+            const res = await axiosInstance.get("/api/auth/check")
             console.log("Response from check-auth route", res);
             
             set({authUser: res.data})
@@ -55,7 +61,7 @@ export const userAuthStore = create((set, get) => ({
     signup: async (data) => {
         try {
             set({isSigningIn: true})
-            const response = await axiosInstance.post("/auth/signup", data)
+            const response = await axiosInstance.post("/api/auth/signup", data)
             set({authUser: response.data})
             toast.success("Account Created Successfully")
             get().connectSocket()
@@ -69,7 +75,7 @@ export const userAuthStore = create((set, get) => ({
     login: async (data) => {
         try {
             set({isLogginIn: true})
-            const response = await axiosInstance.post("/auth/login", data)
+            const response = await axiosInstance.post("/api/auth/login", data)
             set({authUser: response.data})
             toast.success(response.data.message)
             get().connectSocket()
@@ -82,7 +88,7 @@ export const userAuthStore = create((set, get) => ({
 
     logout: async () => {
        try {
-        const response = await axiosInstance.get("/auth/logout")
+        const response = await axiosInstance.get("/api/auth/logout")
         set({authUser: null})
         toast.success(response.data.message)
         get().disconnectSocket()
@@ -94,7 +100,7 @@ export const userAuthStore = create((set, get) => ({
     updateProfile: async(profileData) => {
         set({isUpdatingProfile: true})
         try {
-           const response = await axiosInstance.put("/auth/update-profile", profileData)
+           const response = await axiosInstance.put("/api/auth/update-profile", profileData)
            console.log("Response from update profile", response);
            
            set({authUser: response.data})
