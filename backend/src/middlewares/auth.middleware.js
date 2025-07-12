@@ -4,7 +4,8 @@ import User from '../models/user.model.js';
 export const isLoggedIn = async (req, res, next) => {
     try {
         const token = req.cookies.token
-    
+        console.log("Tokens recieved form cookies", token);
+        
         if(!token){
             return res.status(401).json({
                 message: "User not authorized"

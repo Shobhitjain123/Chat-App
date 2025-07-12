@@ -4,7 +4,6 @@ import { isLoggedIn } from '../middlewares/auth.middleware.js'
 
 const messageRoutes = Router()
 
-
 messageRoutes.get("/user", isLoggedIn, getUsersList)
 
 messageRoutes.get("/:id", isLoggedIn, getMessages)
