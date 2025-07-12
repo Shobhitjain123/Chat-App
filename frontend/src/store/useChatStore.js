@@ -15,7 +15,7 @@ export const useChatStore = create((set, get) => ({
             const response = await axiosInstance.get("/api/message/user")
             set({users: response.data})
         } catch (error) {
-            console.log("Error in fetcing users", error.message);
+            console.error("Error in fetcing users", error.message);
             toast.error(error.response.data.message)
         } finally {
             set({isUsersLoading: false})
@@ -29,24 +29,21 @@ export const useChatStore = create((set, get) => ({
             toast.success("Messages fetched")
             set({messages: response.data})
         } catch (error) {
-            console.log("Error in fetching messages", error.message);              
+            console.error("Error in fetching messages", error.message);              
         } finally{
             set({isMessageLoading: false})
         }
     },
 
-    setSelectedUser: (selectedUser) => {console.log(selectedUser); set({selectedUser})},
+    setSelectedUser: (selectedUser) => set({selectedUser}),
 
     sendMessage: async (messageData) => {
         const {messages, selectedUser} = get()
-        console.log("Selected User", selectedUser);
-        
+             
         try {
             const response = await axiosInstance.post(`/api/message/send/${selectedUser._id}`, messageData)
-            console.log("Response of New message", response.data);
-            
+       
             set({messages: [...messages, response.data.newMessage]})
-            console.log("Updated Messages Array", messages);
             
         } catch (error) {
             toast.error(error.response.data.message)

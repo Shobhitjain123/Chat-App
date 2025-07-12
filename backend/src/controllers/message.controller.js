@@ -24,7 +24,7 @@ const getUsersList = async (req, res) => {
 
     res.status(200).json(filteredUsers);
   } catch (error) {
-    console.log("Error in getting all users", error.message);
+    console.error("Error in getting all users", error.message);
     res.status(500).json({
       message: "Error in getting users",
     });
@@ -35,9 +35,7 @@ const getMessages = async (req, res) => {
   try {
     const { id: userToChatId } = req.params;
     const myId = req.user._id;
-    console.log("user ID", typeof myId);
-    console.log("user to chat with ID", typeof userToChatId);
-
+    
     const messages = await Message.find({
       $or: [
         { senderId: myId, recieverId: userToChatId },
@@ -47,7 +45,7 @@ const getMessages = async (req, res) => {
 
     res.status(200).json(messages);
   } catch (error) {
-    console.log("Error getting in messages", error.message);
+    console.error("Error getting in messages", error.message);
     res.status(500).json({
       message: "Error getting in messages",
     });
@@ -99,7 +97,7 @@ const sendMessage = async (req, res) => {
     });
     
   } catch (error) {
-    console.log("Error in sending message", error.message);
+    console.error("Error in sending message", error.message);
     res.status(500).json({
       message: "Error in sending message",
     });

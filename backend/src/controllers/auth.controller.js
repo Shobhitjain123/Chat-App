@@ -47,7 +47,7 @@ const signup = async (req, res) => {
         })
 
     } catch (error) {
-        console.log("Error Signing up user", error.message);
+        console.error("Error Signing up user", error.message);
         return res.status(500).json({
             message: "Error Signing up user"
         })
@@ -91,7 +91,7 @@ const login = async (req, res) => {
 
 
     } catch (error) {
-        console.log("Error in login in user", error.message);
+        console.error("Error in login in user", error.message);
         res.status(500).json({
             message: "Error in login in user"
         })
@@ -107,7 +107,7 @@ const logout = async (req, res) => {
             message: "User logged out successfully"
         })        
     } catch (error) {
-        console.log("Error in log out user", error.message);
+        console.error("Error in log out user", error.message);
         res.status(500).json({
             message: "Error in log out user"
         })
@@ -132,7 +132,7 @@ const updateProfile = async (req, res) => {
         
         res.status(200).json(updatedUser)
     } catch (error) {
-        console.log("Error in updating profile pic", error.message);
+        console.error("Error in updating profile pic", error.message);
         res.status(500).json({
             message: "Error in updating profile pic"
         })
@@ -143,7 +143,7 @@ const checkAuth = async (req, res) => {
     try {
         res.status(200).json(req.user)
     } catch (error) {
-        console.log("Error in Check Auth Controller", error.message);
+        console.error("Error in Check Auth Controller", error.message);
 
         res.status(500).json({message: "Error in Check Auth Controller"})
         

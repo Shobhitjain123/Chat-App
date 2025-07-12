@@ -3,6 +3,7 @@ import { userAuthStore } from '../store/useAuthStore'
 import { MessageSquare, Mail, Lock, Loader2, EyeClosed, Eye } from 'lucide-react'
 import AuthImagePattern from '../components/AuthImagePattern'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 const LoginPage = () => {
 
   const [showPassword, setShowPassword] = React.useState(false)
@@ -11,10 +12,15 @@ const LoginPage = () => {
     password: ""
   })
   const {login, isLogginIn} = userAuthStore()
-
   const handleSubmit = (e) => {
-    e.preventDefault()
-    login(formData)
+    try {
+      e.preventDefault()
+      login(formData)
+    } catch (error) {
+      setError(true)
+    } finally{
+      setError(false)
+    }
   }
 
   return (
@@ -78,7 +84,7 @@ const LoginPage = () => {
             {
               isLogginIn ? (
                 <>
-                  <Loader2 className='size-5 animate-spin' /> "Loading..."
+                  <Loader2 className='size-5 animate-spin' /> Loading...
                 </>
               ) : (
                 "Log In"

@@ -4,9 +4,8 @@ import toast from 'react-hot-toast';
 import { io } from 'socket.io-client'
 
 const BASE_URL = import.meta.env.VITE_SERVER_URL
-console.log("Server base url", BASE_URL);
 
-export const userAuthStore = create((set, get) => ({
+export const    userAuthStore = create((set, get) => ({
     authUser: null,
     isLogginIn: false,
     isSigningIn: false,
@@ -19,11 +18,9 @@ export const userAuthStore = create((set, get) => ({
     
     connectSocket: () => {
         const {authUser} = get()
-        console.log("User is unser connect socket");
-        
+     
         if(!authUser || get().socket?.connect) return
-        console.log("User is now here");
-        
+               
         const socket = io(BASE_URL, {
             query: {
                 userId: authUser._id
@@ -34,7 +31,6 @@ export const userAuthStore = create((set, get) => ({
         socket.on("getOnlineUsers", (userIds) => {  
             set({onlineUsers: userIds})
         })
-        console.log("Online users", onlineUsers);
         
     },
 
@@ -44,13 +40,11 @@ export const userAuthStore = create((set, get) => ({
 
     checkAuth: async () => {
         try {
-            const res = await axiosInstance.get("/api/auth/check")
-            console.log("Response from check-auth route", res);
-            
+            const res = await axiosInstance.get("/api/auth/check")            
             set({authUser: res.data})
             get().connectSocket()
         } catch (error) {
-            console.log("Error in Auth", error);
+            console.error("Error in Auth", error);
             
             set({authUser: null})
         } finally {
@@ -66,7 +60,7 @@ export const userAuthStore = create((set, get) => ({
             toast.success("Account Created Successfully")
             get().connectSocket()
         } catch (error) {
-            toast.error(error.response.data.message)
+            toast.error(error.message)
         } finally {
             set({isSigningIn: false})
         }
@@ -79,8 +73,13 @@ export const userAuthStore = create((set, get) => ({
             set({authUser: response.data})
             toast.success(response.data.message)
             get().connectSocket()
-        } catch (error) {
-            toast.error(error.response.data.message)
+        } catch (error) {            
+            if(error.message == "Network Error"){
+                toast.error("Server not responding, Try Again later...")
+            } else{
+                toast.error(error.response.data.message)
+            }
+            
         } finally{
             set({isLogginIn: false})
         }
@@ -101,11 +100,8 @@ export const userAuthStore = create((set, get) => ({
         set({isUpdatingProfile: true})
         try {
            const response = await axiosInstance.put("/api/auth/update-profile", profileData)
-           console.log("Response from update profile", response);
-           
-           set({authUser: response.data})
-           console.log("Updated auth user");
-           
+          
+           set({authUser: response.data})           
            toast.success("Profile updated successfully")
         } catch (error) {
             console.error("Error in updating profile", error.message)

@@ -4,8 +4,7 @@ import User from '../models/user.model.js';
 export const isLoggedIn = async (req, res, next) => {
     try {
         const token = req.cookies.token
-        console.log("Tokens recieved form cookies", token);
-        
+           
         if(!token){
             return res.status(401).json({
                 message: "User not authorized"
@@ -24,7 +23,7 @@ export const isLoggedIn = async (req, res, next) => {
         req.user = user
     
     } catch (error) {
-        console.log("Error Authentication User", error.message);
+        console.error("Error Authentication User", error.message);
 
         res.status(500).json({
             message: "Error auuthenticating user"
